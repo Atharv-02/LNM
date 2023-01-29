@@ -1,6 +1,35 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomicfoundation/hardhat-chai-matchers");
+require("@nomiclabs/hardhat-ethers");
+require('dotenv').config();
+const fs = require('fs');
 
-/** @type import('hardhat/config').HardhatUserConfig */
+task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
+  const accounts = await hre.ethers.getSigners();
+
+  for (const account of accounts) {
+    console.log(account.address);
+  }
+});
+
 module.exports = {
-  solidity: "0.8.17",
+  defaultNetwork: "hardhat",
+  networks: {
+    hardhat: {
+      chainId: 1337
+    },
+    mumbai:{
+      url: process.env.ALCHEMY_API_URL,
+      accounts:[process.env.PRIVATE_KEY],
+    }
+  },
+  solidity: {
+    version: "0.8.4",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  }
 };
